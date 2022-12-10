@@ -1,0 +1,17 @@
+name: Universal Flipper Binary
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Generates a universal Flipper Binary.
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Generate
+        run: |
+          chmod +x generate.sh && ./generate.sh
