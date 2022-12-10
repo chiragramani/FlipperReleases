@@ -15,10 +15,28 @@ jobs:
       - name: Generate
         run: |
           chmod +x generate.sh && ./generate.sh
-      - name: Archive generated universal Flipper binary
-        uses: actions/upload-artifact@v3
+      - name: version
+          run: echo "::set-output name=version::$('^VERSION_NAME=' gradle.properties | cut -d'=' -f2-)"
+          id: version
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
         with:
-          name: dist
-          path: |
-            flipper/dist
-            !flipper/dist/mac-universal/**/*
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body: |
+            Universal binary for Flipper version: ${{ steps.version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: flipper/dist/Flipper-mac.zip
+          asset_name: Flipper-mac-universal.zip
+          asset_content_type: application/zip
