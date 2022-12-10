@@ -15,3 +15,10 @@ jobs:
       - name: Generate
         run: |
           chmod +x generate.sh && ./generate.sh
+      - name: Archive generated universal Flipper binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: |
+            flipper/dist
+            !flipper/dist/mac-universal/**/*
