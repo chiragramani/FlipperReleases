@@ -10,6 +10,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Generate
+        env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x generate.sh && ./generate.sh
       - name: version 
