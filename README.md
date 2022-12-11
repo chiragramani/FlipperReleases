@@ -10,4 +10,4 @@ Additional patch applied:
 1. Using https://www.npmjs.com/package/@electron/universal 1.3.4 as this is the latest stable release. 
 
 
-Once Meta distributes a universal Flipper binary, this repository will be deleted. 
+Note: this repository will be deleted when Meta starts distributing a universal Flipper binary.
