@@ -16,8 +16,8 @@ jobs:
         run: |
           chmod +x generate.sh && ./generate.sh
       - name: version
-          run: echo "::set-output name=version::$(grep '^VERSION_NAME=' gradle.properties | cut -d'=' -f2-)"
-          id: version
+        run: echo "::set-output name=version::$(grep '^VERSION_NAME=' gradle.properties | cut -d'=' -f2-)"
+        id: version
       - name: release
         uses: actions/create-release@v1
         id: create_release
