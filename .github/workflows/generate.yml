@@ -25,7 +25,7 @@ jobs:
           draft: false
           prerelease: false
           release_name: ${{ env.flipper_version }}
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ env.flipper_version }}
           body: |
             Universal binary for Flipper version: ${{ env.flipper_version }}
         env:
