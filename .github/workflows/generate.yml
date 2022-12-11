@@ -15,8 +15,8 @@ jobs:
       - name: Generate
         run: |
           chmod +x generate.sh && ./generate.sh
-      - name: version
-        run: echo "::set-output name=version::$(grep '^VERSION_NAME=' flipper/gradle.properties | cut -d'=' -f2-)"
+      - name: version 
+        run: echo "flipper_version=$(grep '^VERSION_NAME=' flipper/gradle.properties | cut -d'=' -f2-)" >> $GITHUB_ENV
         id: version
       - name: release
         uses: actions/create-release@v1
@@ -24,10 +24,10 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: ${{ steps.version.outputs.version }}
+          release_name: ${{ env.flipper_version }}
           tag_name: ${{ github.ref }}
           body: |
-            Universal binary for Flipper version: ${{ steps.version.outputs.version }}
+            Universal binary for Flipper version: ${{ env.flipper_version }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Upload Release Asset
