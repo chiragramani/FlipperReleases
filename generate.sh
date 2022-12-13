@@ -3,6 +3,8 @@ set -exu
 rm -rf flipper
 rm -f flipper.tar.gz
 
+CHECK=$(curl -s https://api.github.com/repos/${REPO}/releases/latest)
+echo $CHECK
 REPO="facebook/flipper"
 TARBALL_URL=$(curl -s https://api.github.com/repos/${REPO}/releases/latest | grep "tarball_url" | head -1 | cut -d : -f 2,3 | tr -d \" | sed 's/,*$//g')
 
