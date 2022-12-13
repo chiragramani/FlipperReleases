@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-set -exu
+
 rm -rf flipper
 rm -f flipper.tar.gz
 
 
 REPO="facebook/flipper"
-CHECK=$(curl -s https://api.github.com/repos/${REPO}/releases/latest)
+CHECK=$(curl -s https://api.github.com/repos/${REPO}/releases/latest 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}')
 echo $CHECK
-TARBALL_URL=$(curl -s https://api.github.com/repos/${REPO}/releases/latest | grep "tarball_url" | head -1 | cut -d : -f 2,3 | tr -d \" | sed 's/,*$//g')
+TARBALL_URL=$(curl -s https://api.github.com/repos/${REPO}/releases/latest --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | grep "tarball_url" | head -1 | cut -d : -f 2,3 | tr -d \" | sed 's/,*$//g')
 
 SOURCE_TAR="flipper.tar.gz"
 curl -L -o $SOURCE_TAR $TARBALL_URL
