@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -exu
 rm -rf flipper
 rm -f flipper.tar.gz
 
