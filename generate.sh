@@ -43,4 +43,4 @@ else
     " package.json
 fi
 yarn install
-yarn build --mac
+yarn build --mac --mac-dmg
