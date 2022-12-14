@@ -6,7 +6,8 @@ rm -f flipper.tar.gz
 
 # Get latest version published by Meta
 REPO="facebook/flipper"
-TARBALL_URL=$(curl -s https://api.github.com/repos/${REPO}/releases/latest 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | grep "tarball_url" | head -1 | cut -d : -f 2,3 | tr -d \" | sed 's/,*$//g')
+LATEST_TAG=$(curl -L https://github.com/facebook/flipper/releases/latest  | grep "facebook/flipper/releases/tag" -m 1 | sed "s/.*releases\/tag\///;s/\".*//")
+TARBALL_URL="https://github.com/facebook/flipper/archive/refs/tags/$LATEST_TAG.tar.gz"
 
 SOURCE_TAR="flipper.tar.gz"
 curl -L -o $SOURCE_TAR $TARBALL_URL
