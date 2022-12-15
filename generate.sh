@@ -43,5 +43,14 @@ else
     $electron_resolution
     " package.json
 fi
+
+# To fix some errors shows in CI, suggesting that repository key should be present in package.json
+build_info='"homepage":'
+repository_info='"repository": "facebook/flipper",'
+
+sed -i '' "/$build_info/ a\\
+  $repository_info
+" package.json
+
 yarn install
-yarn build --mac --mac-dmg
+yarn build --mac-dmg
