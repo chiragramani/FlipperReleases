@@ -17,25 +17,38 @@ jobs:
       - name: version 
         run: echo "flipper_version=$(grep '^VERSION_NAME=' flipper/gradle.properties | cut -d'=' -f2-)" >> $GITHUB_ENV
         id: version
-      - name: release
-        uses: actions/create-release@v1
-        id: create_release
+      # - name: release
+      #   uses: actions/create-release@v1
+      #   id: create_release
+      #   with:
+      #     draft: false
+      #     prerelease: false
+      #     release_name: ${{ env.flipper_version }}
+      #     tag_name: ${{ env.flipper_version }}
+      #     body: |
+      #       Universal binary for Flipper version: ${{ env.flipper_version }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      # - name: Upload Release Asset
+      #   id: upload-release-asset 
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+      #     asset_path: flipper/dist/Flipper-mac.dmg
+      #     asset_name: Flipper-mac-universal.dmg
+      #     asset_content_type: application/octet-stream
+      - name: Create release with asset
+        uses: softprops/action-gh-release@v1
         with:
-          draft: false
-          prerelease: false
-          release_name: ${{ env.flipper_version }}
-          tag_name: ${{ env.flipper_version }}
           body: |
             Universal binary for Flipper version: ${{ env.flipper_version }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
+          draft: false
+          fail_on_unmatched_files: true
+          files: flipper/dist/Flipper-mac.dmg
+          name: ${{ env.flipper_version }}
+          prerelease: false
+          tag_name: ${{ env.flipper_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: flipper/dist/Flipper-mac.dmg
-          asset_name: Flipper-mac-universal.dmg
-          asset_content_type: application/octet-stream
