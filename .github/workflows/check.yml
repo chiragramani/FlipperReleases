@@ -1,0 +1,65 @@
+name: Check for new release
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  check:
+    name: Check if a new Flipper version is available.
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.local.outputs.release != steps.flipper.outputs.release }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - id: local
+        uses: pozetroninc/github-action-get-latest-release@master
+        continue-on-error: true
+        with:
+          repository: ${{ github.repository }}
+      - id: flipper
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: facebook/flipper
+
+  release:
+    name: Release a new universal flipper version if there is a new one
+    needs: check
+    runs-on: macos-latest
+    if: needs.check.outputs.changed == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Generate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x ./generate.sh && ./generate.sh
+      - name: version
+        run: echo "flipper_version=$(grep '^VERSION_NAME=' flipper/gradle.properties | cut -d'=' -f2-)" >> $GITHUB_ENV
+        id: version
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ env.flipper_version }}
+          tag_name: ${{ env.flipper_version }}
+          body: |
+            Universal binary for Flipper version: ${{ env.flipper_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: flipper/dist/Flipper-mac.dmg
+          asset_name: Flipper-mac-universal.dmg
+          asset_content_type: application/octet-stream
