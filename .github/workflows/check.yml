@@ -31,6 +31,8 @@ jobs:
     runs-on: macos-latest
     if: needs.check.outputs.changed == 'true'
     steps:
+      - name: Print changed output from check step
+        run: echo ${{ needs.check.outputs.changed }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Generate
