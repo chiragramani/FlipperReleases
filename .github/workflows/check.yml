@@ -25,9 +25,9 @@ jobs:
         with:
           repository: facebook/flipper
       - name: Print local output
-        run: echo ${{ steps.local.outputs.release }}
-      - name: Print flipper output
-        run: echo ${{ steps.flipper.outputs.release }}
+        run: |
+          echo Local: ${{ steps.local.outputs.release }}
+          echo Flipper: ${{ steps.flipper.outputs.release }}
 
   release:
     name: Release a new universal flipper version if there is a new one
