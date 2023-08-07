@@ -1,0 +1,23 @@
+on:
+  schedule:
+    - cron: '30 5,17 * * *'
+
+jobs:
+  check:
+    name: Check if a new Flipper version is available.
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: latest-local-release
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: ${{ github.repository }}
+
+      - id: latest-flipper-release
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: facebook/flipper
+
+      - name: Release if versions not matching
+        if: ${{ '${{ steps.latest-local-release.outputs.release }}' != '${{ steps.latest-flipper-release.outputs.release }}' }}
+        uses: ./generate.yml
