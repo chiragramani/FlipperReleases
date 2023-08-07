@@ -53,10 +53,10 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: ${{ env.flipper_version }}
-          tag_name: ${{ env.flipper_version }}
+          release_name: v${{ env.flipper_version }}
+          tag_name: v${{ env.flipper_version }}
           body: |
-            Universal binary for Flipper version: ${{ env.flipper_version }}
+            Universal binary for Flipper version: v${{ env.flipper_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
       - name: Upload Release Asset
